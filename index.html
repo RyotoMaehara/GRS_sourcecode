@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Source Code</title>
+<style>
+    /* ベースのスタイル（OSのフォントを使用） */
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        background-color: #fff;
+    }
+
+    /* メインコンテナ */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* タイトルと説明文 */
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { margin-bottom: 1.5rem; color: #666; }
+
+    /* ソースコード表示エリア */
+    pre {
+        background-color: #f5f5f5; /* 薄いグレーの背景 */
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        
+        /* 折り返し設定 */
+        white-space: pre-wrap;
+        word-break: break-all; /* 長い英単語も強制的に折り返す */
+        
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        font-size: 0.9rem;
+    }
+
+    /* ダークモード対応（OSの設定がダークモードの場合に適用） */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        p { color: #aaa; }
+        pre {
+            background-color: #1e1e1e;
+            border-color: #333;
+            color: #f0f0f0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>「動画広告におけるインタラクティブ・モデルの提案と有効性検証」の実験に使用したデモのソースコードです。</h1>
+    <p>※最終更新2025.12.27 Ver.2.12.0<br>※調査は2025.12.11に実施。実験では、Ver.2.11.2を使用。</p>
+    <pre><code>
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ja"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;ADnUI Experiment Demo v2.12.0&lt;/title&gt;
+    
+    &lt;!--
+    &lt;h1 class="title-large"&gt;
+        ***********************************
+        &lt;br&gt;更新情報&lt;br&gt;
+        ***********************************
+    &lt;/h1&gt;
+    &lt;p style="font-size:0.9rem; color:#888; margin-bottom:10px;"&gt;
+        以下、変更履歴（降順）。
+    &lt;/p&gt;
+    &lt;div class="update history"&gt;
+        &lt;p style="white-space: pre;"&gt;
+
+            12/27
+            Ver.2.12.0
+            - 管理用機能を削除。
+            - 全体的なコードの整頓を実施。
+            
+            12/10
+            Ver.2.11.2
+            - モバイル端末環境において、一部ボタンのデザインが、目立ちにくくなっていた事象を修正。
+            Ver.2.11.1
+            - モバイル端末環境において、一部ボタンの表示が、画面幅によって並びや大きさが不適切になっていたものを修正。
+            Ver.2.11.0
+            - タッチ操作において、一部ボタンが押された際のアニメーションが正しく動作しない不具合を修正。
+            Ver.2.10.0
+            - レスポンシブデザインの設定を追加。
+
+            12/09
+            Ver.2.9.0
+            - 一部ボタンの出現アニメーションにスライドインを追加。
+            - ID生成のロジックを変更。
+
+            12/02
+            Ver.2.8.0
+            - ステップ数を5→3に変更。
+            - 各ステップを階層構造に変更。
+            - 管理用機能を追加。
+            - 体験の開始ページを追加。ステップ開始をボタン式に変更。
+            　あわせて終了ページを追加。各ステップへの振り返り機能を追加。
+            Ver.2.7.0
+            - 一部ボタンのエッジにデザインを追加。
+            　あわせてクリック後のアニメーションに押し込まれる動作を追加。
+
+            11/25
+            Ver.2.6.0
+            - 一部ボタン出現時のフェードを強調。
+            Ver.2.5.1
+            - 各ステップの動画を個別のものに差し替え。
+
+            11/18
+            Ver.2.5.0
+            - 動画の再生が動作しなくなる不具合を解消するため、fetchに修正。
+            - ログをmessageでなくtextとして送ることでログが正しく記録されない事象を修正。
+            Ver.2.4.0
+            - GASによるログの通信が正しく行われないためform送信に変更。
+            Ver.2.3.0
+            - アクセスごとのID生成を追加。
+            Ver.2.2.0
+            - 各ボタンにログ区別のためのIDを追加。
+            Ver.2.1.1
+            - デザインの記述を各タグ内からstyleタグ内への統一を実施。
+            Ver.2.1.0
+            - ステップ数を3→5に増加。
+            - シナリオの個別設定機能を追加。
+
+            11/11
+            Ver.2.0.0
+            - 複数ステップ構造を実装。ステップ数を3に増設。
+
+            11/04
+            Ver.1.6.0
+            - 一部のボタン出現時にフェードアニメーションを追加。
+
+            10/14
+            Ver.1.5.1
+            - ポップアップウィンドウを閉じるボタンの出現をウィンドウの表示と同タイミングに変更。
+            Ver.1.5.0
+            - 各ボタンにGASによるログ送信の仕組みを導入。
+
+            10/07
+            Ver.1.3.1
+            - Ver.1.3.0と並行して、これまでの演出を排除したバージョンの作成。
+            - ポップアップウィンドウ背景に画像を設定可能に。
+            
+            09/23
+            Ver.1.3.0
+            - ボタン選択後の色変化を追加。
+            - ボタン選択後に表示ディレイ、中央に残存するアニメーションを追加。
+            Ver.1.2.1
+            - 全体的なデザインを一新。
+
+            09/22
+            Ver.1.2.0
+            - サイトマップボタンを動画終了後に移動。操作によってWebサイトを表示する仕様に変更。
+
+            07/15
+            Ver.1.1.0
+            - 質問ボタンにサイトマップ機能を追加。所定のページ変移を設定。
+
+            07/08
+            Ver.1.0.0
+            - ポップアップウィンドウの表示のトリガーを動画の終了検知に変更。
+            - ウィンドウの大きさを修正。
+
+            07/01
+            Ver.0.4.1
+            - 全体的なデザインに角落としを追加。
+
+            06/17
+            Ver.0.4.0
+            - 確認ボタンを複数に増やし、その内容をユーザーへの質問に変更。
+
+            06/03
+            Ver.0.3.0
+            - ウィンドウを閉じるボタンの表示のトリガーをユーザーによるボタン操作に変更。
+            Ver.0.2.1
+            - ポップアップウィンドウの表示を画面全体に拡大。
+
+            05/19
+            Ver.0.2.0
+            - ポップアップウィンドウを閉じるボタンの表示開始までに1000msのディレイを追加。
+
+            05/13
+            Ver.0.1.0
+            - ボタンを追加。
+            - 押すことで展開するポップアップウィンドウを追加。
+            - ウィンドウ内に閉じるボタンとinframe内にWebサイトを表示する仕組みを追加。
+
+            2025-
+        
+        &lt;/p&gt;
+    &lt;/div&gt;
+    &lt;a&gt;ここが最後尾です&lt;/a&gt;
+    
+    --&gt;
+
+    &lt;link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Hiragino+Kaku+Gothic+ProN&display=swap" rel="stylesheet"&gt;
+    &lt;style&gt;
+        /* --- 基本 --- */
+        *, *::before, *::after { 
+            box-sizing: border-box; margin: 0; padding: 0; 
+            -webkit-tap-highlight-color: transparent; /* タップ時のグレー背景を削除 */
+        }
+        body { 
+            font-family: 'Inter', "Hiragino Kaku Gothic ProN", sans-serif; 
+            background-color: #222; 
+            color: #fff; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow-x: hidden; 
+            padding: 20px; /* スマホ用の余白 */
+        }
+        
+        /* --- スタート・終了画面 --- */
+        .info-container { 
+            text-align: center; 
+            width: 100%;
+            max-width: 600px; 
+            padding: 2rem; 
+            background: #333; 
+            border-radius: 12px; 
+            display: none; /* 初期状態は非表示 */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+        }
+        .info-container.active { display: block; animation: fadeIn 0.5s ease; }
+        
+        .title-large { font-size: 1.8rem; font-weight: bold; margin-bottom: 1rem; }
+        .desc-text { font-size: 1rem; color: #ccc; margin-bottom: 2rem; line-height: 1.6; }
+        
+        .btn-start { 
+            background: linear-gradient(135deg, #309afa, #2563eb); 
+            color: white; border: none; padding: 1.2rem 3rem; border-radius: 50px; 
+            font-size: 1.2rem; font-weight: bold; cursor: pointer; 
+            box-shadow: 0 5px 15px rgba(48, 154, 250, 0.4); transition: 0.3s; 
+        }
+
+        /* 振り返り用リンク */
+        .admin-step-check { margin-top: 2rem; border-top: 1px solid #555; padding-top: 1rem; text-align: left; }
+        .review-link-item { display: block; padding: 10px; color: #aaa; text-decoration: none; border-bottom: 1px solid #444; transition: 0.2s; }
+        .review-link-item:hover { color: #fff; background: #444; padding-left: 15px; }
+
+        /* --- 実験画面レイアウト --- */
+        .page-header { position: absolute; top: 20px; text-align: center; z-index: 10; width: 100%; pointer-events: none; }
+        .step-badge { display: inline-block; background: rgba(0,0,0,0.6); color: #fff; padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; border: 1px solid #555; }
+
+        /* 動画エリア (レスポンシブ対応) */
+        .video-wrapper { 
+            position: relative; 
+            width: 100%;             /* 横幅いっぱい */
+            max-width: 640px;        /* PCでは640pxで止める */
+            aspect-ratio: 16 / 9;    /* アスペクト比を固定 */
+            background: #000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            display: none; 
+        }
+        .video-wrapper.active { display: block; }
+        video { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- UI --- */
+        .popup-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 50; visibility: hidden; opacity: 0; 
+        }
+        .popup-overlay.is-visible { visibility: visible; opacity: 1; }
+
+        .bg-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; z-index: -1; filter: brightness(0.4); }
+        /* --- コンテナ設定 --- */
+        .choices-container { 
+            display: flex; 
+            flex-direction: row; 
+            gap: 10px; /* 隙間を20pxから10pxに短縮 */
+            width: 100%; 
+            padding: 10px; /* 余白を20pxから10pxに短縮 */
+            justify-content: center; 
+            align-items: center; 
+            flex-wrap: nowrap; /* 折り返しを禁止して横並びを強制 */
+        }
+
+        /* スキップボタン */
+        .skip-btn {
+            position: absolute; top: 15px; right: 15px;
+            background: rgba(0, 0, 0, 0.5); color: #fff; border: 1px solid #999;
+            width: 36px; height: 36px; border-radius: 50%;
+            font-size: 1.2rem; line-height: 1; cursor: pointer; pointer-events: auto;
+            display: flex; justify-content: center; align-items: center;
+            transition: 0.2s; z-index: 60; opacity: 0; transform: scale(0.8);
+        }
+        .skip-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: #fff; }
+        .popup-overlay.is-visible .skip-btn {
+            opacity: 1; transform: scale(1);
+            transition: opacity 0.3s ease 0.5s, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s;
+        }
+
+        /* --- 下から飛び出すアニメーション --- */
+        @keyframes popUpSlide {
+            0% { opacity: 0; transform: translateY(60px) scale(0.8); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* --- ボタン --- */
+        /* (step1) */
+        .btn-control { background: #fff; color: #333; border: 1px solid #ccc; padding: 10px 30px; border-radius: 4px; font-size: 1rem; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); pointer-events: auto; }
+        
+        /* --- （Step2, 3用） --- */
+        .btn-tactile {
+            /* width: 160px;  固定幅を削除 */
+            width: auto;      /* 自動調整 */
+            flex: 1;          /* 画面幅に合わせて均等に伸縮 */
+            max-width: 180px; /* PCで大きくなりすぎないように上限を設定 */
+            min-width: 110px; /* スマホで小さくなりすぎないように下限を設定 */
+            height: 120px; 
+            
+            border: none; border-radius: 20px; color: white; font-size: 1.1rem; font-weight: bold;
+            cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            /* ★マテリアル感の演出 */
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.5),           /* ドロップシャドウ */
+                inset 0 3px 0 rgba(255,255,255,0.5),   /* 上部のハイライト */
+                inset 0 -3px 0 rgba(0,0,0,0.1);        /* 下部のシェード */
+            
+            transition: all 0.1s ease; 
+            pointer-events: auto;
+            opacity: 0; /* アニメーション前は隠す */
+        }
+
+        /* 表示時のアニメーション */
+        .popup-overlay.is-visible .btn-tactile { animation: popUpSlide 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .popup-overlay.is-visible .btn-tactile:nth-child(2) { animation-delay: 0.1s; } /* 2つ目は少し遅らせる */
+
+        .btn-tactile:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 30px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.4); }
+        
+        /* 押し込み状態の整合性 */
+        .btn-tactile:active, .btn-tactile.is-pressed { 
+            transform: translateY(4px) scale(0.96) !important; 
+            box-shadow: 
+                0 2px 5px rgba(0,0,0,0.5), 
+                inset 0 2px 0 rgba(255,255,255,0.3), /* 押し込んだ時は少し光が弱まる */
+                inset 0 -1px 0 rgba(0,0,0,0.1) !important;
+            transition: none; /* 即座にへこませる */
+        }
+        
+        /* 連打防止 */
+        .btn-tactile:disabled, .btn-control:disabled {
+            cursor: default; opacity: 0.7; pointer-events: none;
+        }
+
+        .btn-tactile span { 
+            font-size: 0.75rem;
+            font-weight: normal; margin-top: 5px; opacity: 0.9; 
+            white-space: nowrap; /* 勝手な改行を防ぐ */
+        }
+        .btn-1_orange { background: linear-gradient(135deg, #ff6b6b, #ee5253); }
+        .btn-2_blue { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .btn-blue { background: linear-gradient(135deg, #4facfe, #00f2fe); max-width: 240px; /* width: 200px から変更 */
+        }
+
+        /* --- iFrame (Webサイト表示) エリア --- */
+        .iframe-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 100; background: #fff; display: none; }
+        .iframe-wrapper.active { display: block; }
+        .iframe-content { width: 100%; height: 100%; border: none; }
+        .close-iframe-btn {
+            position: absolute; top: 10px; right: 10px; z-index: 101;
+            background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer; font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* --- 質問テキスト --- */
+        .question-text { 
+            /* position: absolute; top: 15%; width: 100%; これらを削除し、以下に変更 */
+            position: relative;
+            width: auto;
+            margin-bottom: 15px; /* ボタンとの間に隙間を作る */
+            
+            text-align: center; 
+            font-size: 1.2rem; /* スマホで見やすいように調整 (1.5remだと大きすぎる場合がある) */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+            font-weight: bold; 
+            
+            /* アニメーション用設定（維持） */
+            opacity: 0; 
+            transform: translateY(-20px); 
+            transition: all 0.5s ease 0.2s; 
+            padding: 0 10px;
+            z-index: 65; /* ボタンより手前に来るように */
+        }
+        .popup-overlay.is-visible .question-text { opacity: 1; transform: translateY(0); }
+        
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+    &lt;div id="startView" class="info-container"&gt;
+        &lt;h1 class="title-large"&gt;動画広告体験デモ&lt;/h1&gt;
+        &lt;p class="desc-text"&gt;これより3パターンの広告が表示されます。&lt;br&gt;X(閉じる)ボタンで次へ進みます。&lt;/p&gt;
+        &lt;button class="btn-start" onclick="startExperiment()"&gt;開始&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div id="finishView" class="info-container"&gt;
+        &lt;h1 class="title-large"&gt;全てのステップが終了しました。&lt;/h1&gt;
+        &lt;p class="desc-text"&gt;ご協力ありがとうございました。&lt;br&gt;アンケート回答にお戻りください。&lt;/p&gt;
+        &lt;div class="admin-step-check"&gt;
+            &lt;p style="font-size:0.9rem; color:#888; margin-bottom:10px;"&gt;▼ 振り返り機能&lt;/p&gt;
+            &lt;a href="?step=1" class="review-link-item"&gt;STEP1&lt;/a&gt;
+            &lt;a href="?step=2" class="review-link-item"&gt;STEP2&lt;/a&gt;
+            &lt;a href="?step=3" class="review-link-item"&gt;STEP3&lt;/a&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id="experimentView" class="video-wrapper"&gt;
+        &lt;div class="page-header"&gt;&lt;span id="stepBadge" class="step-badge"&gt;Step 1&lt;/span&gt;&lt;/div&gt;
+        &lt;video id="myVideo" playsinline width="640" height="360" muted&gt;
+            &lt;source src="demo_video.mp4" type="video/mp4"&gt; &lt;/video&gt;
+
+        &lt;div id="interstitialOverlay" class="popup-overlay"&gt;
+            &lt;div id="bgLayer" class="bg-layer"&gt;&lt;/div&gt;
+            &lt;button id="skipOverlayBtn" class="skip-btn"&gt;✕&lt;/button&gt;
+            &lt;div id="questionText" class="question-text hidden"&gt;今の気分はどっち？&lt;/div&gt;
+            &lt;div id="choicesContainer" class="choices-container"&gt;&lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div id="iframeWrapper" class="iframe-wrapper"&gt;
+            &lt;button id="closeIframeBtn" class="close-iframe-btn"&gt;✕（次へ進む）&lt;/button&gt;
+            &lt;iframe id="interstitialFrame" class="iframe-content" src=""&gt;&lt;/iframe&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // ▼▼▼ GAS設定 (必ずURLを最新に) ▼▼▼
+        const POST_URL = 'https://script.google.com/macros/s/AKfycbyiEkRkisIS80vns4ZE8aq8rcgURtu7Gtssr5QsGdCDd0b43Zfg6i2UwQd3C5ZBSAVe/exec';
+
+        // --- シナリオ設定 ---
+        const scenarioConfig = {
+            1: {
+                type: 'control', videoSrc: "demo_video_outdoor.mp4", bgImage: "demo_image_outdoor.png", 
+                choices: [ { text: "詳しくはこちら", url: "https://enjoy-minakami.jp/", style: "btn-control" } ],
+                transition: "none", // ★Step 1は「パッ」と出る
+                question: null
+            },
+            2: {
+                type: 'single', videoSrc: "demo_video_outdoor.mp4", bgImage: "demo_image_outdoor.png",
+                choices: [ { text: "詳しくはこちら&lt;br&gt;&lt;span&gt;公式サイトを見る&lt;/span&gt;", url: "https://enjoy-minakami.jp/outdoor.php", style: "btn-tactile btn-blue" } ],
+                transition: "opacity 1.0s ease", // ★Step 2は1.0s
+                question: null
+            },
+            3: {
+                type: 'double', videoSrc: "demo_video_outdoor.mp4", bgImage: "demo_image_outdoor.png",
+                choices: [
+                    { text: "温泉！&lt;br&gt;&lt;span&gt;Relax&lt;/span&gt;", url: "https://enjoy-minakami.jp/spa.php", style: "btn-tactile btn-1_orange" },
+                    { text: "スキー！&lt;br&gt;&lt;span&gt;Active&lt;/span&gt;", url: "https://enjoy-minakami.jp/outdoor.php", style: "btn-tactile btn-2_blue" }
+                ],
+                transition: "opacity 1.0s ease", // ★Step 3は1.0s
+                question: "冬の旅行先といえば？"
+            }
+        };
+
+        // --- ID管理 (トップに戻ると新規発行、実験中は維持) ---
+        const urlParams = new URLSearchParams(window.location.search);
+        let currentStep = parseInt(urlParams.get('step'));
+        let USER_ID;
+
+        if (!currentStep) {
+            // トップ画面(Step指定なし)に来たら、新しいIDを生成して保存
+            USER_ID = 'user_' + Math.random().toString(36).substr(2, 9);
+            sessionStorage.setItem('exp_user_id', USER_ID);
+        } else {
+            // 実験中は保存されたIDを使用
+            USER_ID = sessionStorage.getItem('exp_user_id');
+            if (!USER_ID) { // 直リンクなどでIDが無い場合
+                USER_ID = 'user_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('exp_user_id', USER_ID);
+            }
+        }
+        
+        // --- HTML要素取得 ---
+        const startView = document.getElementById('startView');
+        const finishView = document.getElementById('finishView');
+        const experimentView = document.getElementById('experimentView');
+        const stepBadge = document.getElementById('stepBadge');
+        
+        const video = document.getElementById('myVideo');
+        const overlay = document.getElementById('interstitialOverlay');
+        const choicesContainer = document.getElementById('choicesContainer');
+        const questionText = document.getElementById('questionText');
+        const bgLayer = document.getElementById('bgLayer');
+        
+        const skipOverlayBtn = document.getElementById('skipOverlayBtn');
+        const iframeWrapper = document.getElementById('iframeWrapper');
+        const iframe = document.getElementById('interstitialFrame');
+        const closeIframeBtn = document.getElementById('closeIframeBtn');
+
+        // --- 初期表示処理 ---
+        if (!currentStep) {
+            startView.classList.add('active');
+        } else if (currentStep &gt; 3) {
+            finishView.classList.add('active');
+        } else {
+            experimentView.classList.add('active');
+            setupScenario(currentStep);
+        }
+
+        // 実験開始
+        function startExperiment() { window.location.href = "?step=1"; }
+
+        // シナリオセットアップ
+        function setupScenario(stepIndex) {
+            const data = scenarioConfig[stepIndex];
+            video.src = data.videoSrc;
+            stepBadge.textContent = `Step ${stepIndex}`;
+            
+             bgLayer.style.backgroundImage = `url('${data.bgImage}')`;
+            
+            choicesContainer.innerHTML = '';
+            data.choices.forEach((choice, idx) =&gt; {
+                const btn = document.createElement('button');
+                btn.innerHTML = choice.text;
+                btn.className = choice.style;
+                
+                // クリックイベント
+                btn.onclick = function() {
+                    // 連打防止: 全ボタンを無効化
+                    const allBtns = choicesContainer.querySelectorAll('button');
+                    allBtns.forEach(b =&gt; b.disabled = true);
+                    
+                    // クリックされたこのボタンに押し込みクラスを強制付与
+                    // 指を離しても0.15秒間はへこんだままに
+                    btn.classList.add('is-pressed');
+
+                    sendLogToGAS(stepIndex, `btn-${idx}`, choice.text, "click");
+                    
+                    // 0.15秒待ってから遷移
+                    setTimeout(() =&gt; {
+                        overlay.classList.remove('is-visible'); 
+                        setTimeout(() =&gt; showIframe(choice.url), 300);
+                    }, 150); 
+                };
+                choicesContainer.appendChild(btn);
+            });
+
+            if (data.question) {
+                questionText.textContent = data.question;
+                questionText.classList.remove('hidden');
+            } else {
+                questionText.classList.add('hidden');
+            }
+
+            // 動画リセット＆再生
+            video.currentTime = 0;
+            video.muted = true; // 自動再生のためミュート
+            video.play().catch(e =&gt; console.log("Autoplay blocked", e));
+        }
+
+        // 動画終了イベント
+        video.addEventListener('ended', () =&gt; {
+            const data = scenarioConfig[currentStep];
+            sendLogToGAS(currentStep, "video", "Video Ended", "view");
+            overlay.classList.add('is-visible');
+            overlay.style.backgroundColor = data.type === 'control' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.4)';
+        });
+
+        // iFrame表示
+        function showIframe(url) {
+            iframe.src = url;
+            iframeWrapper.classList.add('active');
+        }
+
+        // 次のステップへ進む
+        function proceedToNextStep() {
+            const nextStep = currentStep + 1;
+            setTimeout(() =&gt; {
+                window.location.href = `?step=${nextStep}`;
+            }, 300);
+        }
+
+        // Webサイト閲覧後の閉じるボタン
+        closeIframeBtn.onclick = () =&gt; {
+            iframeWrapper.classList.remove('active');
+            iframe.src = "";
+            proceedToNextStep();
+        };
+
+        // オーバーレイのスキップボタン
+        skipOverlayBtn.onclick = () =&gt; {
+            sendLogToGAS(currentStep, "skip-btn", "Overlay Skip", "skipped");
+            overlay.classList.remove('is-visible');
+            proceedToNextStep();
+        };
+
+        // ログ送信
+        function sendLogToGAS(step, buttonId, targetName, action) {
+            if (POST_URL.includes('XXXX')) return; // URL未設定時は送信しない
+            const data = {
+                userId: USER_ID, step: step, buttonId: buttonId, 
+                target: targetName, action: action, timestamp: new Date().toISOString()
+            };
+            fetch(POST_URL, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify(data)
+            }).catch(console.error);
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+    </code></pre>
+</div>
+
+</body>
+</html>
